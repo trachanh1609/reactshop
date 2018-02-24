@@ -8,6 +8,12 @@ const app = express();
 
 // App setup
 
+// Morgan is a middleware that logs all requests and response
+// This is for debugging
+app.use(morgan('combined'));
+
+// Bodyparser will parse all request as json
+app.use(bodyParser.json({ type: '*/*'}));
 
 
 // Server setup
