@@ -4,7 +4,14 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const app = express();
 const router = require('./router');
+const mongoose = require('mongoose');
 
+// DB setup
+mongoose.connect('mongodb://localhost:27017/auth');
+    // .catch(err => { // we will not be here...
+    //     console.error('App starting error:', err.stack);
+    //
+    // });
 
 
 // App setup
