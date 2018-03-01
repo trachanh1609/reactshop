@@ -2,6 +2,16 @@ const User = require('../models/user')
 // User represent all users, not a particular instance,
 // that's why we can search for One user in the database
 
+const jwt = require('jwt-simple');
+const config = require('../config');
+
+function tokenForUser(user) {
+  const timestamp = new Date().getTime();
+                    // first arg : data to be encoded, second arg: our secret
+  return jwt.encode({ sub : user.id , iat: timestamp }, config.secret );
+  // sub = subject, iat : issue at time
+}
+
 exports.signup = function(req, res, next) {
   // res.send({success: true});
 
@@ -33,7 +43,7 @@ exports.signup = function(req, res, next) {
       if(err) {return next(err);}
 
       // Respond to the request indicating the user was created
-      res.json({"success": true})
+      res.json({token : tokenForUser(user)})
       // res.json(user);  // We dont want to expose all user info, like password
 
     });
