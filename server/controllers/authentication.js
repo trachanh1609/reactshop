@@ -8,6 +8,11 @@ exports.signup = function(req, res, next) {
   const email = req.body.email;
   const password = req.body.password;
 
+  // We need this, otherwise request without email, password can be saved
+  if(!email || !password) {
+    return res.status(422).send({error: 'You must provide email and password'});
+  }
+
   // See if a user with the given email exists
   User.findOne({ email: email }, function(err, existingUser){
     if(err) { return next(err) ;}
@@ -30,7 +35,7 @@ exports.signup = function(req, res, next) {
       // Respond to the request indicating the user was created
       res.json({"success": true})
       // res.json(user);  // We dont want to expose all user info, like password
-      
+
     });
 
   });
