@@ -15,7 +15,12 @@ const localLogin = new LocalStrategy(localOptions, function(email, password, don
     if(!user) { return done(null, false); }
 
     // compare passwords, is password == user.password
-    
+    user.comparePassword(password, function(err, isMatch){
+      if(err) { return done(err);}
+      if(!isMatch) { return done(null, false); }
+
+      return done(null, user);
+    });
   });
 });
 
@@ -35,7 +40,7 @@ const jwtLogin = new JwtStrategy(jwtOptions, function(payload, done){
     if(err) { return done(err, false); } // The process of finding user has error
 
     if(user){
-      done(null, user);  // tell passport who the user is
+      done(null, user);  // tell passport who the user is. Can be accessed by req.user in exports.signin
     } else {
       done(null, false); // The process of finding user is done, but we did not find the user
     }
@@ -44,3 +49,4 @@ const jwtLogin = new JwtStrategy(jwtOptions, function(payload, done){
 
 // Tell passport to use this strategy
 passport.use(jwtLogin);
+passport.use(localLogin);
